@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">WebSocketsButton</string>
+    <string name="connect_to_socket">Connect to Socket</string>
+</resources>
