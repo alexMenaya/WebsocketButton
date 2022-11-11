@@ -23,8 +23,9 @@ class MainActivity : AppCompatActivity() {
 
         val client = OkHttpClient()
 
-        /*
-        I do not think this extension is needed, we have headers in the request
+
+        //Headers in the request do not work, We need to develope a CustomWebSocket
+        // instead of RealWebSocket
         fun OkHttpClient.customNewWebSocket(
             request: Request,
             listener: WebSocketListener) : WebSocket
@@ -33,7 +34,8 @@ class MainActivity : AppCompatActivity() {
             webSocket.connect(this)
             return webSocket
         }
-        */
+
+
 
         binding.connectButton.setOnClickListener {
             val apiKey = "0E9D21AC-1CB5-4385-93BC-01AE14C1CCBD"
@@ -44,13 +46,11 @@ class MainActivity : AppCompatActivity() {
                 .url("$url:$port")
                 .addHeader("Sec-WebSocket-Key", apiKey)
                 .build()
-            Log.e("Alex", Settings.Secure.ANDROID_ID)
-            Log.e("Alex",Settings.Secure.getString(
+            val deviceId = Settings.Secure.getString(
                 this.contentResolver,
                 Settings.Secure.ANDROID_ID)
-            )
-            //val listener = WebSocketListener(apiKey)
-            //val ws : WebSocket = client.newWebSocket(request, listener)
+            val listener = WebSocketListener(apiKey, deviceId)
+            val ws : WebSocket = client.newWebSocket(request, listener)
         }
     }
 }
