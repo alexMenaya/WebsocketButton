@@ -4,15 +4,63 @@ import android.util.Log
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
+import org.json.JSONArray
+import org.json.JSONObject
 
-class WebSocketListener : WebSocketListener(){
+class WebSocketListener (
+    key: String
+        ): WebSocketListener(){
 
     override fun onOpen(webSocket: WebSocket, response: Response) {
-        webSocket.send("Hello World")
+        webSocket.send("key")
         Log.i("Alex", "connected")
     }
 
     override fun onMessage(webSocket: WebSocket, text: String) {
+
+        // dict input for web socket handshake
+        val jsonIn = JSONObject(text)
+        // Parameters for authentication
+        val platform = android.os.Build.MODEL.lowercase()
+        //val salt = ""
+        //val resetToken = ""
+        //val deviceId = ""
+        //val apiKey = ""
+        val bundleId = "com.samcolak.holler"
+
+        //val logInKey = "$platform:$deviceId:$salt:$apiKey"
+        // val token =
+
+        // Returns from web socket handshake
+        val info = JSONObject()
+        info.put("id_bundle", bundleId)
+        info.put("version", 1)
+        info.put("manu", "android") // manufacturer
+        info.put("platform", platform)
+        info.put("format", "phone")
+        info.put("mode", "development")
+
+        if (jsonIn.get("success") == 1) {
+            if (jsonIn.has("target")) {
+                val target : JSONObject = jsonIn.getJSONObject("target")
+                val event = target.get("event")
+
+                if (event == "init") {
+                    val data = JSONObject()
+                    val actionOutput = JSONObject()
+                    actionOutput.put("type", "auth.bindSession")
+                    actionOutput.put("transid", "Alex1234")
+                    actionOutput.put("data", data)
+
+                    val jsonOut = JSONObject()
+                    jsonOut.put("actions", JSONArray().apply {
+                        put(actionOutput)
+                    })
+
+                    webSocket.send(jsonOut.toString())
+                }
+            }
+        }
         output("Received: $text")
     }
 
@@ -26,7 +74,7 @@ class WebSocketListener : WebSocketListener(){
     }
 
     private fun output(text: String) {
-        Log.d("Websockets", text!!)
+        Log.d("Websockets", text)
     }
 
     companion object {
