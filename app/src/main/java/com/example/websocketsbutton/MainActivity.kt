@@ -3,6 +3,8 @@ package com.example.websocketsbutton
 import android.content.ContentProviderOperation.newCall
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import com.example.websocketsbutton.databinding.ActivityMainBinding
 import okhttp3.*
 import okhttp3.EventListener
@@ -42,9 +44,13 @@ class MainActivity : AppCompatActivity() {
                 .url("$url:$port")
                 .addHeader("Sec-WebSocket-Key", apiKey)
                 .build()
-
-            val listener = WebSocketListener(apiKey)
-            val ws : WebSocket = client.newWebSocket(request, listener)
+            Log.e("Alex", Settings.Secure.ANDROID_ID)
+            Log.e("Alex",Settings.Secure.getString(
+                this.contentResolver,
+                Settings.Secure.ANDROID_ID)
+            )
+            //val listener = WebSocketListener(apiKey)
+            //val ws : WebSocket = client.newWebSocket(request, listener)
         }
     }
 }

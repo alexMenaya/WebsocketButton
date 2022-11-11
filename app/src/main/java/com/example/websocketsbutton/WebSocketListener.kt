@@ -1,5 +1,6 @@
 package com.example.websocketsbutton
 
+import android.provider.Settings
 import android.util.Log
 import okhttp3.Response
 import okhttp3.WebSocket
@@ -8,8 +9,10 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 class WebSocketListener (
-    key: String
-        ): WebSocketListener(){
+    APIKey : String
+): WebSocketListener(){
+
+    val apiKey = APIKey
 
     override fun onOpen(webSocket: WebSocket, response: Response) {
         webSocket.send("key")
@@ -22,14 +25,14 @@ class WebSocketListener (
         val jsonIn = JSONObject(text)
         // Parameters for authentication
         val platform = android.os.Build.MODEL.lowercase()
-        //val salt = ""
-        //val resetToken = ""
-        //val deviceId = ""
-        //val apiKey = ""
+        val salt = ""
+        val resetToken = ""
+        val deviceId = Settings.Secure.ANDROID_ID
+        val key = apiKey
         val bundleId = "com.samcolak.holler"
 
-        //val logInKey = "$platform:$deviceId:$salt:$apiKey"
-        // val token =
+        val logInKey = "$platform:$deviceId:$salt:$apiKey"
+        //val token =
 
         // Returns from web socket handshake
         val info = JSONObject()
@@ -65,7 +68,7 @@ class WebSocketListener (
     }
 
     override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
-        webSocket.close(NORMAL_CLOUSURE_STATUS, null)
+        webSocket.close(NORMAL_CLOSURE_STATUS, null)
         output("Closing: $code / $reason")
     }
 
@@ -78,7 +81,7 @@ class WebSocketListener (
     }
 
     companion object {
-        private const val NORMAL_CLOUSURE_STATUS = 1000
+        private const val NORMAL_CLOSURE_STATUS = 1000
     }
 
 }
