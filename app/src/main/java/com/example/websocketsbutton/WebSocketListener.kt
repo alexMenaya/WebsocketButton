@@ -13,16 +13,13 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 class WebSocketListener (
-    APIKey : String,
-    deviceId : String
+    private val deviceId : String
 ): WebSocketListener(){
-
-    //val apiKey = APIKey
-    val deviceId = deviceId
 
     override fun onOpen(webSocket: WebSocket, response: Response) {
         webSocket.send("key")
         Log.i("Alex", "connected")
+        Log.i("Alex", deviceId)
     }
 
     fun md5(str: String): ByteArray = MessageDigest.getInstance("MD5")
@@ -41,17 +38,17 @@ class WebSocketListener (
 
             if (jsonIn.has("transid")) {
 
-                var transid = jsonIn.get("transid")
+                val transid = jsonIn.get("transid")
 
                 if (transid == "SYSTEM") {
 
-                    var dataobject = jsonIn.getJSONObject("data")
+                    val dataobject = jsonIn.getJSONObject("data")
 
-                    var scope = dataobject.get("scope")
+                    val scope = dataobject.get("scope")
 
                     if (scope == "update") { // this is data coming in !!!!
 
-                        var mappings = mapOf<String, String>(
+                        val mappings = mapOf<String, String>(
                             "hollers" to "Holler",
                             "friends" to "Friend",
                             "people" to "Person",

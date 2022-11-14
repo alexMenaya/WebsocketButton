@@ -1,21 +1,18 @@
 package com.example.websocketsbutton
 
-import android.content.ContentProviderOperation.newCall
-import androidx.appcompat.app.AppCompatActivity
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.example.websocketsbutton.databinding.ActivityMainBinding
 import okhttp3.*
-import okhttp3.EventListener
-import okhttp3.internal.closeQuietly
 import okhttp3.internal.ws.RealWebSocket
-import java.io.IOException
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -49,7 +46,7 @@ class MainActivity : AppCompatActivity() {
             val deviceId = Settings.Secure.getString(
                 this.contentResolver,
                 Settings.Secure.ANDROID_ID)
-            val listener = WebSocketListener(apiKey, deviceId)
+            val listener = WebSocketListener(deviceId)
             val ws : WebSocket = client.newWebSocket(request, listener)
         }
     }
